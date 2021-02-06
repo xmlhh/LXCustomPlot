@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT  += core gui
-QT  += opengl       #使用opengl
+#QT  += opengl       #使用opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets  printsupport
 
@@ -18,7 +18,7 @@ TEMPLATE = app
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
 
-DEFINES += QCUSTOMPLOT_USE_OPENGL   #使用opengl
+#DEFINES += QCUSTOMPLOT_USE_OPENGL   #使用opengl
 
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -27,7 +27,8 @@ DEFINES += QCUSTOMPLOT_USE_OPENGL   #使用opengl
 
 CONFIG += c++11
 
-LIBS += -L -llibfreeglut -lopengl32     #依赖opengl库文件
+#LIBS += -L -llibfreeglut -lopengl32     #依赖opengl库文件
+
 
 SOURCES += \
         main.cpp \

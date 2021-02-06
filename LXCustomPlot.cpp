@@ -9,10 +9,12 @@ LXCustomPlot::LXCustomPlot(QWidget *parent)
     , m_dataTracers(QList<LXTracer *>())
     , m_lineTracer(Q_NULLPTR)
 {
+#if defined(Q_OS_WIN32)
+//    setOpenGl(false);
+//    qDebug() << "OpenGL is open " << openGl();
+#elif defined(Q_OS_LINUX)
 
-    setOpenGl(true);
-
-    qDebug() << "OpenGL is open " << openGl();
+#endif
 }
 
 void LXCustomPlot::mouseMoveEvent(QMouseEvent *event)

@@ -1,6 +1,18 @@
 #include "LDrawSpectrum.h"
 #include <QVBoxLayout>
 
+#ifndef __ONEPLOT__
+    #define __ONEPLOT__
+#elif !defined __TWOPLOT__
+    #define __TWOPLOT__
+#elif !defined __FORPLOT__
+    #define __FORPLOT__
+#elif !defined __SIXPLOT__
+    #define __SIXPLOT__
+#elif !defined __TENPLOT__
+    #define __TENPLOT__
+#endif
+
 const QString strName = "性能测试";
 
 LDrawSpectrum::LDrawSpectrum(QWidget *parent)
@@ -17,7 +29,7 @@ LDrawSpectrum::LDrawSpectrum(QWidget *parent)
 
     // add title layout element:
     m_pCustomPlot->plotLayout()->insertRow(0);
-    m_pCustomPlot->plotLayout()->addElement(0, 0, new QCPTextElement(m_pCustomPlot, strName + " (10条动态曲线)", QFont("微软雅黑", 12, QFont::Bold)));
+    m_pCustomPlot->plotLayout()->addElement(0, 0, new QCPTextElement(m_pCustomPlot, strName + " (多条动态曲线)", QFont("微软雅黑", 12, QFont::Bold)));
 
     m_pCustomPlot->legend->setVisible(true);
     QFont legendFont = font();  // start out with MainWindow's font..
@@ -35,8 +47,21 @@ LDrawSpectrum::LDrawSpectrum(QWidget *parent)
     m_pCustomPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
 
     QList<QColor> colors;
+#ifdef __ONEPLOT__
+    colors << QColor(255, 255, 0);
+#elif defined __TWOPLOT__
+    colors << QColor(29, 255, 227) << QColor(255, 255, 0);
+#elif defined __FORPLOT__
+    colors << QColor(29, 0, 255) << QColor(100, 255, 0)
+           << QColor(255, 106, 227) << QColor(29, 255, 227);
+#elif defined __SIXPLOT__
+    colors << QColor(29, 0, 255) << QColor(100, 255, 0)
+           << QColor(255, 106, 227) << QColor(29, 255, 227)
+           << QColor(255, 255, 0) << QColor(200, 106, 20);
+#elif defined __TENPLOT__
     colors << QColor(29, 0, 255) << QColor(100, 255, 0) << QColor(255, 106, 227) << QColor(29, 255, 227) << QColor(255, 255, 0)
             << QColor(200, 106, 20) << QColor(255, 255, 255) << QColor(29, 255, 255) << QColor(255, 255, 0) << QColor(29, 106, 255);
+#endif
 
     for (auto index = 0; index < colors.size(); ++index) {
         QCPGraph *pGraph = m_pCustomPlot->addGraph();
@@ -62,7 +87,7 @@ LDrawSpectrum::LDrawSpectrum(QWidget *parent)
     resize(QSize(1000, 600));
 
     connect(&m_pUpdateTimer, SIGNAL(timeout()), this, SLOT(update()));
-    m_pUpdateTimer.start(5);
+    m_pUpdateTimer.start(30);
 }
 
 LDrawSpectrum::~LDrawSpectrum()
@@ -74,9 +99,24 @@ void LDrawSpectrum::update()
 {
     int nCount = 10000;
     QList<QVector<double>> yAlis;
+
+#ifdef __ONEPLOT__
+    QVector<double> x(nCount), y1(nCount);
+    yAlis << y1;
+#elif defined __TWOPLOT__
+    QVector<double> x(nCount), y1(nCount), y2(nCount);
+    yAlis << y1 << y2;
+#elif defined __FORPLOT__
+    QVector<double> x(nCount), y1(nCount), y2(nCount), y3(nCount), y4(nCount);
+    yAlis << y1 << y2 << y3 << y4;
+#elif defined __SIXPLOT__
+    QVector<double> x(nCount), y1(nCount), y2(nCount), y3(nCount), y4(nCount), y5(nCount), y6(nCount);
+    yAlis << y1 << y2 << y3 << y4 << y5 << y6;
+#elif defined __TENPLOT__
     QVector<double> x(nCount), y1(nCount), y2(nCount), y3(nCount), y4(nCount), y5(nCount),
             y6(nCount), y7(nCount), y8(nCount), y9(nCount), y10(nCount); // initialize with entries 0..100
     yAlis << y1 << y2 << y3 << y4 << y5 << y6 << y7 << y8 << y9 << y10;
+#endif
 
     for (auto index = 0; index < yAlis.size(); ++index) {
         for (int i = 0; i < nCount; ++i)
@@ -94,6 +134,9 @@ void LDrawSpectrum::update()
     }
 
     for (auto index = 0; index < m_pCustomPlot->graphCount(); ++index) {
+        if (index >= yAlis.size()) {
+            continue;
+        }
         m_pCustomPlot->graph(index)->data().data()->clear();
         m_pCustomPlot->graph(index)->addData(x, yAlis[index]);
     }
