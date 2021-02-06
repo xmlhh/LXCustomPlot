@@ -1,4 +1,4 @@
-#include "Dialog.h"
+#include "LDrawSpectrum.h"
 #include <QApplication>
 #include <QObject>
 //#include <GL/glut.h>

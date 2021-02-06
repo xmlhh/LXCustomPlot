@@ -13,10 +13,8 @@ public:
     ~LDrawSpectrum();
 
 protected:
-    LXCustomPlot *m_customPlot;
-
+    LXCustomPlot *m_pCustomPlot;
     QTimer m_pUpdateTimer;
-    QList<QCPGraph *> m_pGraphs;
 
 private slots:
     void update();
